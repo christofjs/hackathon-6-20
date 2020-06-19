@@ -1,7 +1,8 @@
 # Paper class that has methods to modify and create and image
 from PIL import Image, ImageDraw
 import Config as Config
-
+import Dictionary as Dictionary
+from Character import Character
 
 class Paper:
     def __init__(self, name, width=Config.PAPER_WIDTH, height=Config.PAPER_HEIGHT, color=Config.PAPER_COLOR):
@@ -11,6 +12,10 @@ class Paper:
         self._height = height
         self._width = width
         self._color = color
+
+        self.charset = Dictionary.DICTIONARY  # Converts the dictionary from Dictionary into one with objects
+        for x in self.charset:
+            self.charset[x] = Character(self.charset[x])
 
         self._clear()  # Sets the image to a blank page
 
@@ -56,3 +61,35 @@ class Paper:
 
             dy += pixel_size + 1  # Increase the vertical offset
             dx = 0  # Reset the horizontal offset
+
+    def drawSentence(self, string, x=Config.MARGIN, y=Config.MARGIN,
+                     wrap_width=(Config.PAPER_WIDTH - (Config.MARGIN * 2)),
+                     x_spacing=Config.X_SPACING,
+                     y_spacing=Config.Y_SPACING,
+                     color=Config.FONT_COLOR):
+        """Draws a sentence starting at a point, wraps after passing a specified width
+        (relative to the left edge of paper)"""
+
+        # First convert the string into braille letters
+        braille_code = []
+        for letter in string:
+            braille_code.append(self.charset[letter])
+
+        dx, dy = 0, 0
+        character_width = Config.FONT_SIZE * 3 + x_spacing * 2
+        character_height = Config.FONT_SIZE * 5 + y_spacing
+
+        # Displaying the letters
+        for character in braille_code:
+
+            self.drawChar(character, x + dx, y + dy, color)
+
+            if dx + character_width >= wrap_width:  # If it has hit the right margin, wrap
+                dx = 0
+                dy += character_height
+            else:
+                dx += character_width # Move to next char
+
+            if dy + character_height >= Config.PAPER_HEIGHT - Config.MARGIN * 2:  # If it hits the end of the page
+                print("Out of space on page.")
+                return

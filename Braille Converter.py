@@ -1,10 +1,10 @@
 # Main
 from Paper import Paper
-from Character import Character
 import Dictionary
 import os
 
-def getInput(file):
+
+def getInput(file):  # To open the file
     input_text = open(file, "r")
     return input_text.read().replace('\n', '')
 
@@ -13,6 +13,9 @@ def main():
 
     exit = False
     while not exit:
+
+        #  Main Menu
+
         print("Welcome to the Braille Converter!"
               "\n====="
               "\n(1) Convert input from 'input.txt'"
@@ -30,6 +33,8 @@ def main():
 
         if choice == 1 or choice == 2:
 
+            # Submenu for creating a paper
+
             print("=" * 25)
             input_valid = False
             while not input_valid:
@@ -40,6 +45,8 @@ def main():
                     print("Invalid input, try again.")
 
             paper_name = name
+
+            # Ask if it is mirrored
 
             print("=" * 25)
             input_valid = False
@@ -54,15 +61,22 @@ def main():
             if mirrored in ["Y", "y"]:
                 is_mirrored = True
 
-            if choice == 1:
+            if choice == 1:  # If user chose to read from file
                 text = getInput("input.txt")
-            else:
+                for letter in text:
+                    if Dictionary.DICTIONARY.get(letter) is None:  # Make sure text is valid
+                        print("'" + letter + "' is an invalid character."
+                                             "\nFix input.txt and try again.")
+                        input("Press Enter to exit...")
+                        quit()  # If input.txt has invalid char, exit program
+
+            else:  # If user chose console input
                 print("=" * 25)
                 input_valid = False
                 while not input_valid:
                     choice = input("Enter text to convert:")
                     for letter in choice:
-                        if Dictionary.DICTIONARY.get(letter) is None:
+                        if Dictionary.DICTIONARY.get(letter) is None:  # Make sure console input is valid
                             print("'" + letter + "' is an invalid character, try again.")
                             input_valid = False
                             break
@@ -70,18 +84,20 @@ def main():
                             input_valid = True
                 text = choice
 
-            if not os.path.isdir("./output"):
+            if not os.path.isdir("./output"):  # If output folder doesn't exist, make one
                 os.mkdir("./output")
 
             paper = Paper(paper_name)
 
             print("=" * 25 + "\nWorking...")
 
-            if is_mirrored:
+            if is_mirrored:  # Make it mirrored
                 paper.drawMirroredSentence(paper.convertBrailleCharacter(text))
             else:
                 paper.drawSentence(paper.convertBrailleCharacter(text))
             print("Done.")
+
+            # If they want to do it again
 
             input_valid = False
             while not input_valid:
@@ -94,9 +110,13 @@ def main():
             if choice in ["y", "Y"]:
                 exit = True
 
+        # Exit
+
         elif choice == 3:
             input("Exiting...")
             exit = True
+
+        # Information screen
 
         elif choice == 4:
             print("=" * 25 + "\nINFORMATION MENU\n=====")
@@ -122,8 +142,6 @@ def main():
                   "\n\n")
             input("Press Enter to return to main menu...")
     print("\n\n\n\n\n")
-
-
 
 
 if __name__ == "__main__":

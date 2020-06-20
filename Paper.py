@@ -98,7 +98,7 @@ class Paper:
                      y_spacing=Config.Y_SPACING,
                      color=Config.FONT_COLOR):
         """Draws a sentence starting at a point, wraps after passing a specified width
-        (relative to the left edge of paper), requires a list of braille character objects"""
+        (relative to the left edge of paper), requires a list of braille character objects, will create multiple pages"""
 
         dx, dy = 0, 0
         character_width = Config.FONT_SIZE * 3 + x_spacing * 2
@@ -117,6 +117,7 @@ class Paper:
                 dx += character_width  # Move to next char
 
             if dy + character_height >= Config.PAPER_HEIGHT - Config.MARGIN * 2:  # If it hits the end of the page
+                # Make a new Paper object, have it draw remaining chars
                 next_page = Paper(self.name, (self._page + 1), self.charset)
                 next_page.drawSentence(braille_code[n:], x, y, wrap_width, x_spacing, y_spacing, color)
                 break
@@ -129,7 +130,7 @@ class Paper:
                      y_spacing=Config.Y_SPACING,
                      color=Config.FONT_COLOR):
         """Draws a sentence starting at a point, wraps after passing a specified width
-        (relative to the left edge of paper), requires a list of braille character objects"""
+        (relative to the left edge of paper), requires a list of braille character objects, will create multiple pages, all mirrored"""
 
         dx, dy = 0, 0
         character_width = Config.FONT_SIZE * 3 + x_spacing * 2
@@ -148,6 +149,7 @@ class Paper:
                 dx += character_width  # Move to next char
 
             if dy + character_height >= Config.PAPER_HEIGHT - Config.MARGIN * 2:  # If it hits the end of the page
+                # Make a new Paper object, have it draw remaining chars
                 next_page = Paper(self.name, (self._page + 1), self.charset)
                 next_page.drawMirroredSentence(braille_code[n:], x, y, wrap_width, x_spacing, y_spacing, color)
                 break

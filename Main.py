@@ -8,6 +8,8 @@ def main():
     test_paper = Paper("TestNumber1")
     test_paper.drawSentence("hello this is a test")
     test_paper.show()
+    test_paper.mirror()
+    test_paper.show()
 
 
 if __name__ == "__main__":

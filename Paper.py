@@ -1,5 +1,5 @@
 # Paper class that has methods to modify and create and image
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageOps
 import Config as Config
 import Dictionary as Dictionary
 from Character import Character
@@ -93,3 +93,6 @@ class Paper:
             if dy + character_height >= Config.PAPER_HEIGHT - Config.MARGIN * 2:  # If it hits the end of the page
                 print("Out of space on page.")
                 return
+
+    def mirror(self):  # Flips it so that you can poke it out
+        self.image = ImageOps.mirror(self.image)

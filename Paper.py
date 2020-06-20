@@ -75,7 +75,7 @@ class Paper:
         for letter in string:
             if letter.isupper():
                 braille_code.append(self.charset["CAPITAL"])
-                braille_code.append(self.charset[letter])
+                braille_code.append(self.charset[letter.lower()])
             elif letter.isnumeric():
                 braille_code.append(self.charset["NUMERIC"])
                 braille_code.append(self.charset[letter])

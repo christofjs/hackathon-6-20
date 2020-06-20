@@ -72,14 +72,17 @@ class Paper:
 
         # First convert the string into braille letters
         braille_code = []
+
         for letter in string:
-            if letter.isupper():
+
+            if letter.isupper():  # Checks for special cases
                 braille_code.append(self.charset["CAPITAL"])
                 braille_code.append(self.charset[letter.lower()])
             elif letter.isnumeric():
                 braille_code.append(self.charset["NUMERIC"])
                 braille_code.append(self.charset[letter])
-            else:
+
+            else:  # Normal condition
                 braille_code.append(self.charset[letter])
 
         dx, dy = 0, 0

@@ -11,4 +11,4 @@ It uses Pillow version 7.1.2
 ## Usage
 
 To use the program, simple run Braille Converter.py and follow the prompts in the program. If you would like to
-convert a large amount of text, paste it into input.txt.
+convert a large amount of text, paste it into input.txt. All images will be saved into the directory 'output'.

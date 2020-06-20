@@ -4,18 +4,23 @@ import Config as Config
 import Dictionary as Dictionary
 from Character import Character
 
+
 class Paper:
-    def __init__(self, name, width=Config.PAPER_WIDTH, height=Config.PAPER_HEIGHT, color=Config.PAPER_COLOR):
+    def __init__(self, name, page=1, charset=False, width=Config.PAPER_WIDTH, height=Config.PAPER_HEIGHT, color=Config.PAPER_COLOR):
         """Creates an image that is associated with the object"""
 
         self.name = str(name)  # Name to be used when saving the file
         self._height = height
         self._width = width
         self._color = color
+        self._page = page
 
-        self.charset = Dictionary.DICTIONARY  # Converts the dictionary from Dictionary into one with objects
-        for x in self.charset:
-            self.charset[x] = Character(self.charset[x])
+        if charset:
+            self.charset = charset
+        else:
+            self.charset = Dictionary.DICTIONARY  # Converts the dictionary from Dictionary into one with objects
+            for x in self.charset:
+                self.charset[x] = Character(self.charset[x])
 
         self._clear()  # Sets the image to a blank page
 
@@ -34,7 +39,7 @@ class Paper:
     def save(self):
         """Saves the image to a physical file that is the name the object was created with"""
 
-        self.image.save(self.name + ".png")
+        self.image.save("./output/" + self.name + " pg" + str(self._page) + ".png")
 
     def show(self):
         """Opens the image in whatever is your system default, doesn't require saving"""
@@ -62,14 +67,7 @@ class Paper:
             dy += pixel_size + 1  # Increase the vertical offset
             dx = 0  # Reset the horizontal offset
 
-    def drawSentence(self, string, x=Config.MARGIN, y=Config.MARGIN,
-                     wrap_width=(Config.PAPER_WIDTH - (Config.MARGIN * 2)),
-                     x_spacing=Config.X_SPACING,
-                     y_spacing=Config.Y_SPACING,
-                     color=Config.FONT_COLOR):
-        """Draws a sentence starting at a point, wraps after passing a specified width
-        (relative to the left edge of paper)"""
-
+    def convertBrailleCharacter(self, string):
         # First convert the string into braille letters
         braille_code = []
 
@@ -92,24 +90,70 @@ class Paper:
                 braille_code.append(self.charset[letter])
                 numeric_conditions = False
 
+        return braille_code
+
+    def drawSentence(self, braille_code, x=Config.MARGIN, y=Config.MARGIN,
+                     wrap_width=(Config.PAPER_WIDTH - (Config.MARGIN * 2)),
+                     x_spacing=Config.X_SPACING,
+                     y_spacing=Config.Y_SPACING,
+                     color=Config.FONT_COLOR):
+        """Draws a sentence starting at a point, wraps after passing a specified width
+        (relative to the left edge of paper), requires a list of braille character objects"""
+
         dx, dy = 0, 0
         character_width = Config.FONT_SIZE * 3 + x_spacing * 2
         character_height = Config.FONT_SIZE * 5 + y_spacing
 
         # Displaying the letters
-        for character in braille_code:
+        for n in range(len(braille_code)):
 
+            character = braille_code[n]
             self.drawChar(character, x + dx, y + dy, color)
 
             if dx + character_width >= wrap_width:  # If it has hit the right margin, wrap
                 dx = 0
                 dy += character_height
             else:
-                dx += character_width # Move to next char
+                dx += character_width  # Move to next char
 
             if dy + character_height >= Config.PAPER_HEIGHT - Config.MARGIN * 2:  # If it hits the end of the page
-                print("Out of space on page.")
-                return
+                next_page = Paper(self.name, (self._page + 1), self.charset)
+                next_page.drawSentence(braille_code[n:], x, y, wrap_width, x_spacing, y_spacing, color)
+                break
+
+        self.save()
+
+    def drawMirroredSentence(self, braille_code, x=Config.MARGIN, y=Config.MARGIN,
+                     wrap_width=(Config.PAPER_WIDTH - (Config.MARGIN * 2)),
+                     x_spacing=Config.X_SPACING,
+                     y_spacing=Config.Y_SPACING,
+                     color=Config.FONT_COLOR):
+        """Draws a sentence starting at a point, wraps after passing a specified width
+        (relative to the left edge of paper), requires a list of braille character objects"""
+
+        dx, dy = 0, 0
+        character_width = Config.FONT_SIZE * 3 + x_spacing * 2
+        character_height = Config.FONT_SIZE * 5 + y_spacing
+
+        # Displaying the letters
+        for n in range(len(braille_code)):
+
+            character = braille_code[n]
+            self.drawChar(character, x + dx, y + dy, color)
+
+            if dx + character_width >= wrap_width:  # If it has hit the right margin, wrap
+                dx = 0
+                dy += character_height
+            else:
+                dx += character_width  # Move to next char
+
+            if dy + character_height >= Config.PAPER_HEIGHT - Config.MARGIN * 2:  # If it hits the end of the page
+                next_page = Paper(self.name, (self._page + 1), self.charset)
+                next_page.drawMirroredSentence(braille_code[n:], x, y, wrap_width, x_spacing, y_spacing, color)
+                break
+
+        self.mirror()
+        self.save()
 
     def mirror(self):  # Flips it so that you can poke it out
         self.image = ImageOps.mirror(self.image)

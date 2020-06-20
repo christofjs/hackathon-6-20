@@ -4,9 +4,14 @@ from Character import Character
 import Dictionary
 
 
+def getInput(file):
+    input_text = open(file, "r")
+    return input_text.read().replace('\n', '')
+
+
 def main():
-    input_text = open("input.txt", "r")
-    text = input_text.read().replace('\n','')
+
+    text = getInput("input.txt")
 
     test_paper = Paper("Page 1")
     test_paper.drawSentence(text)

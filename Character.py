@@ -14,7 +14,7 @@ class Character:
 
         self.pixels = [[0 for n in range(3)].copy() for i in range(5)]  # List to be used by Paper to display a char
 
-        # Update display_list to match the braille code, see http://braillebug.org/braille_deciphering.asp#:~:text=Capitalizing%20in%20Braille,the%20whole%20word%20is%20capitalized.
+        # Update display_list to match the braille code, see http://braillebug.org/braille_deciphering.asp
         self.pixels[0][0] = int(braille_code[0])
         self.pixels[2][0] = int(braille_code[1])
         self.pixels[4][0] = int(braille_code[2])

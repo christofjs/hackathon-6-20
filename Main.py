@@ -5,8 +5,11 @@ import Dictionary
 
 
 def main():
-    test_paper = Paper("TestNumber1")
-    test_paper.drawSentence("hello 9999 hello 123 hi 123 123")
+    input_text = open("input.txt", "r")
+    text = input_text.read().replace('\n','')
+
+    test_paper = Paper("Page 1")
+    test_paper.drawSentence(text)
     test_paper.show()
 
 

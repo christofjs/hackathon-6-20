@@ -73,7 +73,14 @@ class Paper:
         # First convert the string into braille letters
         braille_code = []
         for letter in string:
-            braille_code.append(self.charset[letter])
+            if letter.isupper():
+                braille_code.append(self.charset["CAPITAL"])
+                braille_code.append(self.charset[letter])
+            elif letter.isnumeric():
+                braille_code.append(self.charset["NUMERIC"])
+                braille_code.append(self.charset[letter])
+            else:
+                braille_code.append(self.charset[letter])
 
         dx, dy = 0, 0
         character_width = Config.FONT_SIZE * 3 + x_spacing * 2

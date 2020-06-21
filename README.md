@@ -1,7 +1,5 @@
 # Braille Converter
 
-[![Run on Repl.it](https://repl.it/badge/github/christofjs/hackathon-6-20)](https://repl.it/github/christofjs/hackathon-6-20)
-
 Braille converter is a program designed to aid in the creation of low-cost, usable braille.
 It aims to make creating pages of braille easier and faster, without the use of specialized equipment.
 

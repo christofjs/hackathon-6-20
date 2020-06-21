@@ -142,7 +142,7 @@ def main():
         # Exit
 
         elif choice == 4:
-            input("Exiting...")
+            print("Exiting...")
             exit = True
 
     print("\n\n\n\n\n")

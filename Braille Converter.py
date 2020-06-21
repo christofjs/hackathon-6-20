@@ -12,16 +12,18 @@ def getInput(file):  # To open the file
 def main():
 
     exit = False
+
     while not exit:
 
         #  Main Menu
 
         print("Welcome to the Braille Converter!"
               "\n====="
-              "\n(1) Convert input from 'input.txt'"
+              "\n(1) Information Menu"
               "\n(2) Convert input from console"
-              "\n(3) Exit program"
-              "\n(4) Information Menu")
+              "\n(3) Convert input from 'input.txt'"
+              "\n(4) Exit program")
+
         input_valid = False
         while not input_valid:
             choice = input("Enter option:")
@@ -31,7 +33,35 @@ def main():
             else:
                 print("Invalid input, try again.")
 
-        if choice == 1 or choice == 2:
+        # Information screen
+
+        if choice == 1:
+            print("=" * 25 + "\nINFORMATION MENU\n=====")
+            print("ABOUT"
+                  "\n====="
+                  "\nThis program was created for the OSU Hack-a-thon of Summer 2020 (Theme: Accessibility). "
+                  "\nThe objective is to make creating braille easier and more accessible. "
+                  "\nTypical braille stamping equipment is hard to get and expensive, "
+                  "\nhowever one can use this program to make low-budget braille."
+                  "\n====="
+                  "\nHOW TO USE"
+                  "\n====="
+                  "\nEnter large input into 'input.txt' or use the console for smaller batches"
+                  "\nFinished pages are saved in the the 'output' directory"
+                  "\nTo make braille, simply convert your input using one of the options, "
+                  "\nchoose to have the paper mirrored, and poke the dots with a blunt point."
+                  "\nThe resulting indentations represent braille."
+                  "\n====="
+                  "\nCONFIG"
+                  "\n====="
+                  "\nTo configure the color, size, fitting, and spacing of the braille markings, see Config.py"
+                  "\nTo configure braille translations, see Dictionary.py"
+                  "\n\n")
+            input("Press Enter to return to main menu...")
+
+        # Translation options
+
+        if choice == 2 or choice == 3:
 
             # Submenu for creating a paper
 
@@ -61,12 +91,12 @@ def main():
             if mirrored in ["Y", "y"]:
                 is_mirrored = True
 
-            if choice == 1:  # If user chose to read from file
+            if choice == 3:  # If user chose to read from file
                 text = getInput("input.txt")
                 for letter in text:
-                    if Dictionary.DICTIONARY.get(letter) is None:  # Make sure text is valid
+                    if Dictionary.DICTIONARY.get(letter) is None and not letter.isupper():  # Make sure text is valid
                         print("'" + letter + "' is an invalid character."
-                                             "\nFix input.txt and try again.")
+                                             "\nFix input.txt and run the program again.")
                         input("Press Enter to exit...")
                         quit()  # If input.txt has invalid char, exit program
 
@@ -74,15 +104,14 @@ def main():
                 print("=" * 25)
                 input_valid = False
                 while not input_valid:
-                    choice = input("Enter text to convert:")
-                    for letter in choice:
-                        if Dictionary.DICTIONARY.get(letter) is None:  # Make sure console input is valid
+                    text = input("Enter text to convert:")
+                    for letter in text:
+                        if Dictionary.DICTIONARY.get(letter) is None and not letter.isupper():  # Make sure console input is valid
                             print("'" + letter + "' is an invalid character, try again.")
                             input_valid = False
                             break
                         else:
                             input_valid = True
-                text = choice
 
             if not os.path.isdir("./output"):  # If output folder doesn't exist, make one
                 os.mkdir("./output")
@@ -101,46 +130,21 @@ def main():
 
             input_valid = False
             while not input_valid:
-                choice = input("Would you like to exit the program? (Y/N):")
-                if choice in ["y", "Y", "n", "N"]:
+                is_exit = input("Would you like to exit the program? (Y/N):")
+                if is_exit in ["y", "Y", "n", "N"]:
                     input_valid = True
                 else:
                     print("Invalid input, try again")
 
-            if choice in ["y", "Y"]:
+            if is_exit in ["y", "Y"]:
                 exit = True
 
         # Exit
 
-        elif choice == 3:
+        elif choice == 4:
             input("Exiting...")
             exit = True
 
-        # Information screen
-
-        elif choice == 4:
-            print("=" * 25 + "\nINFORMATION MENU\n=====")
-            print("ABOUT"
-                  "\n====="
-                  "\nThis program was created for the OSU Hack-a-thon of Summer 2020 (Theme: Accessibility). "
-                  "\nThe objective is to make creating braille easier and more accessible. "
-                  "\nTypical braille stamping equipment is hard to get and expensive, "
-                  "\nhowever one can use this program to make low-budget braille."
-                  "\n====="
-                  "\nHOW TO USE"
-                  "\n====="
-                  "\nEnter large input into 'input.txt' or use the console for smaller batches"
-                  "\nFinished pages are saved in the the 'output' directory"
-                  "\nTo make braille, simply convert your input using one of the options, "
-                  "\nchoose to have the paper mirrored, and poke the dots with a blunt point."
-                  "\nThe resulting indentations represent braille."
-                  "\n====="
-                  "\nCONFIG"
-                  "\n====="
-                  "\nTo configure the color, size, fitting, and spacing of the braille markings, see Config.py"
-                  "\nTo configure braille translations, see Dictionary.py"
-                  "\n\n")
-            input("Press Enter to return to main menu...")
     print("\n\n\n\n\n")
 
 
